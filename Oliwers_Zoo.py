@@ -112,20 +112,6 @@ def zoo(animals):
     print("\tVilken månad vill du till Oliwers zoo?:\n")
     date = input("\t")
 
-    
-    print(f"\tVilken dag i {date} vill du komma?")
-    day = input("\t")
-    # while True:
-    #     if date == "januari" or date == "mars"or date == "maj" or date == "juli" or date == "augusti" or date == "oktober" or date == "december":
-    #         if day <= 31:
-    #             False
-    #     elif date == "april" or date == "juni" or date == "september" or date == "november":
-    #         if day <=30:
-    #             False
-    #     elif date == "februari":
-    #         if day <=28:
-    #             False
-    #     else:print("fel interval i månaden")
     # Ask what time they want to come
     print("\tvilken tid vill du komma?(hh:mm): \n")
     arrival = input("\t")
