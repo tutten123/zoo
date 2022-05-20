@@ -6,7 +6,7 @@ Oliwer Toth
 
 ## Description
 
-This README is written in markdown. 
+This is a program where you will visit a zoo. You chose which time you want to arrive and departure. Based on the month you visit the animals may be in hibernate or not, it depends on the season. As the user, you can also add a new animal to the zoo. 
 
 ## Languages
 
