@@ -7,29 +7,49 @@
 class Animal:
     
     def __init__(self, name, hibernate, awake, sleep, foodtime, place):
-        # Alla djurens attribut
+
         self.name = name
         self.hibernate = hibernate
         self.awake = awake
         self.sleep = sleep
         self.foodtime = foodtime
         self.place = place
+        
 
     def __str__(self) -> str:
-        return f"{self.name} Och dess plats är {self.place}"
+        """String of Attributes
+
+        Returns:
+            str: Name and Place of the object
+        """
+        return f"{self.name} och dess plats är {self.place}."
 
     def get_all_attri(self):
-        return self.name, self.hibernate, self.awake, self.foodtime
+        """returns all attributes
+
+        Returns:
+            str, str, int, int, int, str: All the attributes of the object
+        """
+        return self.name, self.hibernate, self.awake, self.sleep, self.foodtime, self.place
 
     def is_awake(self, date, arri_h, depa_h):
+        """Awake time
+
+        Args:
+            date (str): month to compare with
+            arri_h (int): hour for arrival of guest
+            depa_h (int): hour for departure of guest
+
+        Returns:
+            bool: Returns if arrival is in Awake time
+        """
         
-        # Kollar när djuret är i ide
+        # Check when the animal is in hibernate
         if self.hibernate == date:
             return False
 
-        # Kollar vilket djur som är vaken under tiden man är där
+        # Check which animal is awake while you are there
         awake_h = int(self.awake[0:2])
-        # awake_m = (self.awake[3:5])
         sleep_h = int(self.sleep[0:2])
         if arri_h >= awake_h:
             return True 
@@ -40,7 +60,18 @@ class Animal:
 
 
     def check_food(self, arri_m, arri_h):
-        # Kollar när alla djuren matas
+        """Check if foodtime is in when the user is at the zoo
+
+        Args:
+            arri_m int: foodtime place 0 and 1
+            arri_h int: foodtime place 3 and 4
+
+        Returns:
+            tuple(str, int, int)/bool: name, foodtime, foodtime
+            or
+            bool: False if not being fed within timeframe
+        """
+        # Checks when all animals are fed
         food_h = int(self.foodtime[0:2])
         food_m = int(self.foodtime[3:5])
         if food_h > arri_h:
@@ -49,70 +80,130 @@ class Animal:
             return (self.name, self.foodtime[0:2], self.foodtime[3:5])
         else:
             return False
+    
 
 
 
 # functions
+def add_animal():
+    """
+        Adds object to the file
+    """
 
+    print("\tNu får du lägga till djuret.")
+    name = input("\tnamn på djur: ")
+    hibernate = input("\tIde: ")
+    awake = input("\tVaken(hh:mm): ")
+    sleep = input("\tSömn(hh:mm): ") 
+    foodtime = input("\tMatdags(hh:mm): ") 
+    place = input("\tPlats: ")
+    with open("animal_file.txt", "a", encoding="utf8") as g:
+        save_string = (f"{name}/{hibernate}/{awake}/{sleep}/{foodtime}/{place}\n")
+        g.write(save_string)
+    
+        
 def zoo(animals):
-        print("Välkommen till Oliwers zoo")
-        # Fråga vilket datum användaren vill komma
-        date = int(input("Vilken månad vill du till Oliwers zoo?(månadstal 1-12) "))
-        if date >= 2 and date <= 10:
-            date = "sommar"
+    """The user interface
+
+    Args:
+        animals (str): all the animals
+    """
+    
+    print("\tVilken månad vill du till Oliwers zoo?:\n")
+    date = input("\t")
+
+    # Ask what time they want to come
+    print("\tvilken tid vill du komma?(hh:mm): \n")
+    arrival = input("\t")
+    arri_h = int(arrival[0:2])
+    arri_m = int(arrival[3:5])
+    
+    print("\tvilken tid vill du lämna?(hh:mm): \n")
+    departure = input("\t")
+    depa_h = int(departure[0:2])
+    
+    if date == "december" or date == "januari" or date == "februari":
+        date = "vinter"
+    else:
+        date = "sommar"
+    
+    
+    # Go through the list of animal objects to find which animals are awake
+    available_animals = []
+
+    for animal in animals:
+        if animal.is_awake(date, arri_h, depa_h):
+            available_animals.append(animal)
+
+    # Check when the animals eat when you are there
+    feeding_animals = []
+    for animal in available_animals:
+        feeding_animals.append(animal.check_food(arri_m, arri_h))
+
+    # Print out the animal objects and whether they are fed while you are there
+    print("\n")
+    print("\tFöljande djur är tillgängliga under ditt besök!")
+    for animal in available_animals:
+        print(f"\t{animal}")
+    print("\n")
+        
+    
+    print("\t=================================\n")
+    # Check if feeding is a bool
+    print("\tFöljande djur matas under ditt besök!")
+    for feeding in feeding_animals:
+        if isinstance(feeding, bool):
+            continue
         else:
-            date = "vinter"
-        # Fråga vilken tid de vill komma
-        arrival = input("vilken tid vill du komma?(hh:mm) ")
-        arri_h = int(arrival[0:2])
-        arri_m = int(arrival[3:5])
-        
-        departure = input("vilken tid vill du lämna?(hh:mm) ")
-        depa_h = int(departure[0:2])
-        # depa_m = int(departure[3:5])
-        
-        
-        # Gå igenom listan med djurobjekt för att finna vilka djur som är vakna
-        # Tom lista som appendas där nere med djur som är vakna under tiden man är på zooet
-        available_animals = []
+            print(f"\t{feeding[0]} matas kl {feeding[1]}:{feeding[2]}.")
 
-        for animal in animals:
-            if animal.is_awake(date, arri_h, depa_h):
-                available_animals.append(animal)
-        # Kollar när djuren äter när man är där
-        feeding_animals = []
-        for animal in available_animals:
-            feeding_animals.append(animal.check_food(arri_m, arri_h))
+def load_animals():
+    """Load all objects to file
 
-        # Skriv ut djurobjekten samt om de matas under tiden man är där
-        # skriver ut vilka djur som är tillängliga
-        print("\n")
-        print("\tFöljande djur är tillgängliga under ditt besök!")
-        for animal in available_animals:
-            print(f"\t{animal}")
-        print("\n")
-            
-        
-        print("\t===========================\n")
-        # Skriver ut när djuren äter
-        print("\tFöljande djur matas under ditt besök!")
-        for feeding in feeding_animals:
-            if isinstance(feeding, bool):
-                continue
-            else:
-                print(f"\t{feeding[0]} matas kl {feeding[1]}:{feeding[2]}.")
+    Returns:
+        str: The object
+    """
+    # Open the animal file and reads it 
+    with open("animal_file.txt", "r", encoding="utf8") as f:
+        animal = []
+    # Adds animal to the file
+        for line in f.readlines():
+            attributes = line.split("/")
+            this_ani = Animal(attributes[0],
+                                  attributes[1], 
+                                  attributes[2], 
+                                  attributes[3],
+                                  attributes[4],
+                                  attributes[5].rstrip("\n"))
+            animal.append(this_ani)
+    
+    return animal    
+
+
 def main():
     
-    animals = [] #load_animals()
-    animal = Animal("Björn", "vinter", "08:00" ,"16:00", "13:00", "längst bort")
-    animal1 = Animal("Tiger", "-", "03:00" ,"17:00", "12:30", "vänstra hörnet")
-    animal2 = Animal("Älg", "-", "07:00", "20:00", "15:00", "högra hörnet")
-    animals.append(animal)
-    animals.append(animal1)
-    animals.append(animal2)
+    print("\tVälkommen till Oliwers zoo!\n")
+    while True:
+        print("\tVad vill du göra?")
+        print("\t1. Besöka?")
+        print("\t2. Lägga till?")
+        print("\t0. Avsluta?")
+        print("\n")
+
+        # Makes the program work without errors
+        chose = input("\t")
+        if chose == "1":
+            animals = load_animals()
+            zoo(animals)
+            break
+        elif chose == "2":
+            add_animal()
+        elif chose == "0":
+            break
+        else:
+            print("inmatat fel värde.")
+            print("försök igen.")
     
-   
-    zoo(animals)    
     
 
 if __name__=="__main__":
