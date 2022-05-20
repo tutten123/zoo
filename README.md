@@ -6,7 +6,7 @@ Oliwer Toth
 
 ## Description
 
-Denna README är skriven i markdown. Den är till för att ge ett exempel på vad en README kan innehålla och hur den kan se ut.
+This README is written in markdown. 
 
 ## Languages
 
@@ -25,10 +25,12 @@ This project has been tested on Python 3.7+. To install Python, visit the follow
 
 ## Usage
 
+![image](https://user-images.githubusercontent.com/96169663/169514244-9ca5ebc0-9ae8-44ca-b751-9ef6381236d5.png)
 
 
 ## Example
 
+![image](https://user-images.githubusercontent.com/96169663/169514881-a2d9acc9-d681-43e9-99c9-b45d6cae5235.png)
 
 
 ## To do
